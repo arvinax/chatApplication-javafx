@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="467.0" prefWidth="310.0" style="-fx-background-color: #2c344b;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller.LoginPageController">
+    <children>
+        <AnchorPane layoutY="419.0" prefHeight="48.0" prefWidth="310.0" style="-fx-background-color: #43bb73;">
+            <children>
+                <Label layoutX="133.0" layoutY="11.0" onMouseClicked="#back" prefHeight="17.0" prefWidth="45.0" text="Log23in">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+        <AnchorPane prefHeight="48.0" prefWidth="310.0" style="-fx-background-color: #2e354f;">
+            <children>
+                <Label layoutX="131.0" layoutY="14.0" text="Multibit" textFill="#8c90b3">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <Circle fill="#fa4771" layoutX="16.0" layoutY="24.0" radius="5.0" stroke="#fa4771" strokeType="INSIDE" />
+                <Circle fill="#ffc965" layoutX="30.0" layoutY="24.0" radius="5.0" stroke="#ffc965" strokeType="INSIDE" />
+                <Circle fill="#42cf9b" layoutX="45.0" layoutY="24.0" radius="5.0" stroke="#42cf9b" strokeType="INSIDE" />
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutX="19.0" layoutY="222.0" prefHeight="50.0" prefWidth="270.0" style="-fx-border-color: #8c90b3; -fx-border-radius: 2;">
+            <children>
+                <Label layoutX="76.0" layoutY="16.0" text="hharddy" textFill="#8c90b3">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutX="20.0" layoutY="298.0" prefHeight="50.0" prefWidth="270.0" style="-fx-border-color: #8c90b3; -fx-border-radius: 2;">
+            <children>
+                <Label layoutX="14.0" layoutY="17.0" text="********" textFill="#8c90b3">
+                    <font>
+                        <Font name="Arial Black" size="14.0" />
+                    </font>
+                </Label>
+                <Label layoutX="202.0" layoutY="15.0" text="Restore?" textFill="#8c90b3">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+        <Label layoutX="89.0" layoutY="377.0" text="or Create new profile" textFill="#8c90b3">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <ImageView fitHeight="107.0" fitWidth="140.0" layoutX="102.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@icon.png" />
+            </image>
+        </ImageView>
+        <Circle fill="DODGERBLUE" layoutX="154.0" layoutY="155.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+        <ImageView fitHeight="73.0" fitWidth="80.0" layoutX="114.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@pic.jpg" />
+            </image>
+        </ImageView>
+        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="467.0" prefWidth="310.0" style="-fx-background-color: #2c344b;">
+            <children>
+                <AnchorPane layoutY="419.0" prefHeight="48.0" prefWidth="310.0" style="-fx-background-color: #43bb73;">
+                    <children>
+                  <Button fx:id="loginButton" layoutX="120.0" layoutY="7.0" mnemonicParsing="false" onAction="#login" style="-fx-background-color: #43bb73;" text="login">
+                     <font>
+                        <Font name="Century Schoolbook" size="16.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                    </children>
+                </AnchorPane>
+                <AnchorPane prefHeight="73.0" prefWidth="310.0" style="-fx-background-color: #2e354f;">
+                    <children>
+                        <Label layoutX="180.0" layoutY="19.0" text="Jasem&amp;Sarah" textFill="#8c90b3">
+                            <font>
+                                <Font name="Century Schoolbook" size="18.0" />
+                            </font>
+                        </Label>
+                        <Circle fill="#fa4771" layoutX="22.0" layoutY="30.0" onMouseClicked="#closeclick" radius="11.0" stroke="#fa4771" strokeType="INSIDE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Circle>
+                        <Circle fill="#ffc965" layoutX="52.0" layoutY="30.0" onMouseClicked="#minclick" radius="11.0" stroke="#ffc965" strokeType="INSIDE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Circle>
+                        <Circle fill="#42cf9b" layoutX="81.0" layoutY="30.0" radius="11.0" stroke="#42cf9b" strokeType="INSIDE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Circle>
+                    </children>
+                </AnchorPane>
+                <AnchorPane layoutX="21.0" layoutY="223.0" prefHeight="50.0" prefWidth="270.0" style="-fx-border-color: #8c90b3; -fx-border-radius: 2;">
+               <children>
+                  <TextField fx:id="enterUsernameTF" prefHeight="48.0" prefWidth="270.0" promptText="username">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                  </TextField>
+               </children>
+                </AnchorPane>
+                <AnchorPane layoutX="24.0" layoutY="298.0" prefHeight="50.0" prefWidth="270.0" style="-fx-border-color: #8c90b3; -fx-border-radius: 2;">
+               <children>
+                  <PasswordField fx:id="enterPasswordField" layoutX="1.0" layoutY="1.0" prefHeight="48.0" prefWidth="270.0" promptText="password" />
+               </children>
+                </AnchorPane>
+                <ImageView fx:id="loginImage" fitHeight="107.0" fitWidth="140.0" layoutX="105.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../images/loginImage.jpg" />
+                    </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
+                </ImageView>
+                  <Label layoutX="238.0" layoutY="367.0" text="Restore?" textFill="#8c90b3">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+                  </Label>
+            <Label fx:id="validationMessageLB" layoutX="21.0" layoutY="177.0" prefHeight="34.0" prefWidth="270.0" textFill="#ebe7e7">
+               <font>
+                  <Font size="23.0" />
+               </font></Label>
+            <Button fx:id="signUpButton" layoutX="24.0" layoutY="365.0" mnemonicParsing="false" style="-fx-background-color: #2c344b;" text="or Sign Up" textFill="#cea7e1">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+
+
+            </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>
