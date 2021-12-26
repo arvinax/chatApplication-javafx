@@ -10,7 +10,6 @@ public class Database {
         try{
             Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sara", "root","");
             return myConn;
-
         }catch (Exception e) {
             out.println(e);
         }
