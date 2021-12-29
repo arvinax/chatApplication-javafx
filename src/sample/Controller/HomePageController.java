@@ -16,12 +16,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import sample.Database;
+import sample.Model.Users;
 
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HomePageController implements Initializable {
@@ -51,6 +53,24 @@ public class HomePageController implements Initializable {
 
     @FXML
     private ImageView allChatsSide;
+
+    @FXML
+    private ImageView channelChatsSide;
+
+    @FXML
+    private ImageView groupsChatsSide;
+
+    @FXML
+    private ImageView privateChatsSide;
+
+    @FXML
+    private ImageView profileSide;
+
+    @FXML
+    private ImageView attach;
+
+    @FXML
+    private ImageView emojy;
 
     @FXML
     void clickedSend(MouseEvent event) throws Exception {
@@ -85,24 +105,57 @@ public class HomePageController implements Initializable {
         Image logImage = new Image(logFile.toURI().toString());
         allChatsSide.setImage(logImage);
 
+        File logFile1 = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\users1.png");
+        Image logImage1 = new Image(logFile1.toURI().toString());
+        privateChatsSide.setImage(logImage1);
+
+        File logFile2 = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\group1.png");
+        Image logImage2 = new Image(logFile2.toURI().toString());
+        groupsChatsSide.setImage(logImage2);
+
+        File logFile3 = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\channelChatsSide.png");
+        Image logImage3 = new Image(logFile3.toURI().toString());
+        channelChatsSide.setImage(logImage3);
+
+        File logFile4 = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\profileSide.png");
+        Image logImage4 = new Image(logFile4.toURI().toString());
+        profileSide.setImage(logImage4);
+
+        File logFile5 = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\emojy.png");
+        Image logImage5 = new Image(logFile5.toURI().toString());
+        emojy.setImage(logImage5);
+
+        File logFile6 = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\attach.png");
+        Image logImage6 = new Image(logFile6.toURI().toString());
+        attach.setImage(logImage6);
+
+        File logFile7 = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\sendMsg.png");
+        Image logImage7 = new Image(logFile7.toURI().toString());
+        sendMsg.setImage(logImage7);
 
         try {
             showChatHistory();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        showUsersList();
+        try {
+            showUsersList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    
+    void showUsersList() throws Exception {
+        File file = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\sendMsg.png");
+        Image image = new Image(file.toURI().toString());
 
-
-    private final Image IMAGE_APPLE  = new Image("http://findicons.com/files/icons/832/social_and_web/64/apple.png");
-
-    void showUsersList(){
         ListView<String> listView = new ListView<String>();
         ObservableList<String> items = FXCollections.observableArrayList ();
 
-        for (int i = 0; i < 50; i++) {
-            items.add("Jasem\nJasem");
+        ArrayList<Users> users = getUsers();
+
+        for (int i = 0; i < users.size(); i++) {
+            items.add(users.get(i).getUsername());
         }
 
         listView.setItems(items);
@@ -112,19 +165,19 @@ public class HomePageController implements Initializable {
             @Override
             public void updateItem(String name, boolean empty) {
                 super.updateItem(name, empty);
-                imageView1.setImage(IMAGE_APPLE);
+                imageView1.setImage(image);
                 //   int index = getIndex();
                 setText(name);
                 setGraphic(imageView1);
                 setFont(Font.font(20));
-                setAlignment(Pos.CENTER);
+                setAlignment(Pos.CENTER_LEFT);
                 setOnMouseClicked(mouseEvent -> {
                     ObservableList selected = listView.getSelectionModel().getSelectedItems();
                     for(Object o : selected){
                         System.out.println(o);
                     }
                 });
-                setStyle("-fx-background-color: palegreen; -fx-background-insets: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, purple, 10, 0, 0, 0)");
+                setStyle("-fx-background-color:  linear-gradient(to top right,  #c9ebf5, #f5c1f3); -fx-background-insets: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, purple, 10, 0, 0, 0)");
             }
         });
 
@@ -132,6 +185,18 @@ public class HomePageController implements Initializable {
         sideVbox.getChildren().add(listView);
         sideVbox.setAlignment(Pos.CENTER);
 
+    }
+
+    private ArrayList<Users> getUsers() throws Exception {
+        ArrayList<Users> users = new ArrayList<>();
+        Connection connection = Database.getConnection();
+        String sql = "SELECT username FROM users";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet resultSet = ps.executeQuery();
+        while (resultSet.next()){
+            users.add(new Users(resultSet.getString("username")));
+        }
+        return users;
     }
 
     void showChatHistory() throws Exception {
