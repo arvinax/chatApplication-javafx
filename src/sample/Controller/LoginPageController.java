@@ -114,8 +114,8 @@ public class LoginPageController implements Initializable {
 
         if (checkLoginFields()){
             if (confirmLogin(enterUsernameTF.getText(), enterPasswordField.getText())){
-                validationMessageLB.setText("welcome");
-                validationMessageLB.setTextFill(Color.GREEN);
+                gotHomePage(enterUsernameTF.getText());
+                this.validationMessageLB.getScene().getWindow().hide();
             }else {
                 validationMessageLB.setText("incorrect info");
                 validationMessageLB.setTextFill(Color.RED);
@@ -126,6 +126,18 @@ public class LoginPageController implements Initializable {
         }
         validationMessageLB.setAlignment(Pos.CENTER);
     }
+
+    public void gotHomePage(String username) throws IOException {
+        HomePageController homePageController = new HomePageController();
+        homePageController.loggedUser = username;
+        System.out.println(homePageController.loggedUser);
+        Parent root = FXMLLoader.load(this.getClass().getResource("../View/HomePage.fxml"));
+        Stage HomePage = new Stage();
+        HomePage.setTitle("Home Page");
+        HomePage.setScene(new Scene(root));
+        HomePage.show();
+    }
+
 
 
     static boolean confirmLogin(String username, String password) throws Exception {
