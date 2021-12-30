@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 public class HomePageController implements Initializable {
 
     public String loggedUser;
+    private String selectedUser = null;
 
     @FXML
     private VBox MessageHolder;
@@ -86,20 +87,23 @@ public class HomePageController implements Initializable {
         label.setMaxWidth(550);
 
         if (inputTxt.getText().isBlank() == false){
-            System.out.println(loggedUser + " inside the method");
-            String sql = "INSERT INTO private_message(message_text, message_from, message_to) VALUES(?,?,?)";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, label.getText());
-            ps.setString(2, "caraw");
-            ps.setString(3, "justim");
-            ps.executeUpdate();
-            MessageHolder.getChildren().add(label);
-            inputTxt.setText("");
+            if (selectedUser != null) {
+                String sql = "INSERT INTO private_message(message_text, message_from, message_to) VALUES(?,?,?)";
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ps.setString(1, label.getText());
+                ps.setString(2, LoginPageController.loggedUser);
+                ps.setString(3, selectedUser);
+                ps.executeUpdate();
+                MessageHolder.getChildren().add(label);
+                inputTxt.setText("");
+            }
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
 
         File logFile = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\allChatsSide.png");
         Image logImage = new Image(logFile.toURI().toString());
@@ -133,18 +137,17 @@ public class HomePageController implements Initializable {
         Image logImage7 = new Image(logFile7.toURI().toString());
         sendMsg.setImage(logImage7);
 
-        try {
-            showChatHistory();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         try {
             showUsersList();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
+
+    // show users in listview
+
     void showUsersList() throws Exception {
         File file = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\sendMsg.png");
         Image image = new Image(file.toURI().toString());
@@ -160,21 +163,28 @@ public class HomePageController implements Initializable {
 
         listView.setItems(items);
 
+
         listView.setCellFactory(param -> new ListCell<String>() {
             private ImageView imageView1 = new ImageView();
             @Override
             public void updateItem(String name, boolean empty) {
                 super.updateItem(name, empty);
                 imageView1.setImage(image);
-                //   int index = getIndex();
                 setText(name);
                 setGraphic(imageView1);
                 setFont(Font.font(20));
                 setAlignment(Pos.CENTER_LEFT);
+
                 setOnMouseClicked(mouseEvent -> {
                     ObservableList selected = listView.getSelectionModel().getSelectedItems();
                     for(Object o : selected){
-                        System.out.println(o);
+                        try {
+                            selectedUser = users.get(getIndex()).getUsername();
+                            showChatHistory(LoginPageController.loggedUser, users.get(getIndex()).getUsername());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 setStyle("-fx-background-color:  linear-gradient(to top right,  #c9ebf5, #f5c1f3); -fx-background-insets: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, purple, 10, 0, 0, 0)");
@@ -199,9 +209,10 @@ public class HomePageController implements Initializable {
         return users;
     }
 
-    void showChatHistory() throws Exception {
+    void showChatHistory(String from, String to) throws Exception {
+        MessageHolder.getChildren().removeAll(MessageHolder.getChildren());
         Connection connection = Database.getConnection();
-        String sql = "SELECT * FROM private_message WHERE message_from = '"+"justim"+"' OR message_from = '"+"caraw"+"' AND message_from = '"+"caraw"+"' OR message_from = '"+"caraw"+"' ";
+        String sql = "SELECT * FROM private_message WHERE message_from = '"+from+"' AND message_to = '"+to+"' OR message_from = '"+to+"' AND message_to = '"+from+"' ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ResultSet resultSet = ps.executeQuery();
         while (resultSet.next()){
@@ -212,15 +223,12 @@ public class HomePageController implements Initializable {
             label.setAlignment(Pos.BOTTOM_LEFT);
             label.setMinWidth(Region.USE_PREF_SIZE);
             label.wrapTextProperty();
-           // label.setMaxWidth(Region.USE_COMPUTED_SIZE);
-           // label.setMinWidth(Region.USE_PREF_SIZE);
-
 
 
             MessageHolder.setAlignment(Pos.BOTTOM_RIGHT);
             MessageHolder.setSpacing(20);
 
-            if (resultSet.getString("message_from").equals("justim")){
+            if (resultSet.getString("message_from").equals(from) && resultSet.getString("message_to").equals(to)){
                 String text = resultSet.getString("message_text");
                 label.setText(text);
                 label.setAlignment(Pos.BOTTOM_RIGHT);
@@ -229,7 +237,7 @@ public class HomePageController implements Initializable {
                 label.setPadding(new Insets(10));
                 MessageHolder.getChildren().add(label);
             }
-            else if (resultSet.getString("message_from").equals("caraw")){
+            else if (resultSet.getString("message_to").equals(from) && resultSet.getString("message_from").equals(to)){
                 String text = resultSet.getString("message_text");
                 label.setText(text);
                 label.setAlignment(Pos.BOTTOM_LEFT);

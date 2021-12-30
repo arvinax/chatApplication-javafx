@@ -26,6 +26,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sample.Database;
+import sample.Model.Users;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +37,8 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
 public class LoginPageController implements Initializable {
+
+    public static String loggedUser;
 
     @FXML
     private Button signUpButton;
@@ -114,23 +117,21 @@ public class LoginPageController implements Initializable {
 
         if (checkLoginFields()){
             if (confirmLogin(enterUsernameTF.getText(), enterPasswordField.getText())){
-                gotHomePage(enterUsernameTF.getText());
+                loggedUser = enterUsernameTF.getText();
+                gotHomePage();
                 this.validationMessageLB.getScene().getWindow().hide();
             }else {
                 validationMessageLB.setText("incorrect info");
                 validationMessageLB.setTextFill(Color.RED);
             }
         }else{
-            validationMessageLB.setText("Eat it!!");
+            validationMessageLB.setText("Please fill up the fields!!");
             validationMessageLB.setTextFill(Color.RED);
         }
         validationMessageLB.setAlignment(Pos.CENTER);
     }
 
-    public void gotHomePage(String username) throws IOException {
-        HomePageController homePageController = new HomePageController();
-        homePageController.loggedUser = username;
-        System.out.println(homePageController.loggedUser);
+    public void gotHomePage() throws IOException {
         Parent root = FXMLLoader.load(this.getClass().getResource("../View/HomePage.fxml"));
         Stage HomePage = new Stage();
         HomePage.setTitle("Home Page");
