@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import sample.Database;
+import sample.Main;
 
 
 import java.io.File;
@@ -56,6 +57,8 @@ public class RegisterPageController implements Initializable {
     @FXML
     private Label errorLabel;
 
+    @FXML
+    private Label restoreLBL;
 
     private void closeStage(){
         ((Stage)cancelButton.getScene().getWindow()).close();
@@ -89,12 +92,13 @@ public class RegisterPageController implements Initializable {
         if (checkAllFields()){
             if (uniqueUsername()){
                 Connection connection = Database.getConnection();
+                String pass = Main.getMd5(passwordField.getText());
                 String sql = "INSERT INTO users(name, lastname, username, password, phone) VALUES(?,?,?,?,?)";
                 PreparedStatement ps = connection.prepareStatement(sql);
                 ps.setString(1, nameField.getText());
                 ps.setString(2, lastnameField.getText());
                 ps.setString(3, usernameField.getText());
-                ps.setString(4, passwordField.getText());
+                ps.setString(4, pass);
                 ps.setString(5, phoneField.getText());
                 ps.executeUpdate();
                 this.getClass();

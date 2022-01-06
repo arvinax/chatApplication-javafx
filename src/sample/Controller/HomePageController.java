@@ -39,8 +39,8 @@ public class HomePageController implements Initializable {
 
     public  String loggedUser;
     private String selectedUser = null;
-    private String selectedGroup = null;
-    private String selectedChannel = null;
+    public static String selectedGroup = null;
+    public static String selectedChannel = null;
     private String selectedSection = null;
 
 
@@ -98,7 +98,8 @@ public class HomePageController implements Initializable {
     @FXML
     private ImageView newGroupButton;
 
-
+    @FXML
+    private Label addMemberButton;
 
     @FXML
     void clickedSend(MouseEvent event) throws Exception {
@@ -150,12 +151,9 @@ public class HomePageController implements Initializable {
                         MessageHolder.getChildren().add(label);
                         inputTxt.setText("");
                     }
-
                 }
             }
         }
-
-
     }
 
     private boolean checkIfChannelAdmin(String sChannel) throws Exception {
@@ -163,7 +161,6 @@ public class HomePageController implements Initializable {
         String sql = "SELECT * FROM channels WHERE channel_name = '"+sChannel+"' AND channel_owner = '"+LoginPageController.loggedUser+"' ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ResultSet set = ps.executeQuery();
-        System.out.println(LoginPageController.loggedUser + " in checher");
         if (set.next()) return true;
         return false;
     }
@@ -211,8 +208,23 @@ public class HomePageController implements Initializable {
         Image logImage9 = new Image(logFile9.toURI().toString());
         newChannelButton.setImage(logImage9);
 
+        profileSide.setOnMouseClicked(mouseEvent -> {
+            Parent root = null;
+            Stage primaryStage = new Stage();
+            try {
+                root = FXMLLoader.load(getClass().getResource("../View/ProfilePage.fxml"));
+                primaryStage.setTitle("Profile");
+                Scene scene = new Scene(root);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
         channelChatsSide.setOnMouseClicked(mouseEvent -> {
             selectedSection = "channels";
+
             try {
                 showChannelsList();
             } catch (Exception e) {
@@ -223,6 +235,13 @@ public class HomePageController implements Initializable {
 
         allChatsSide.setOnMouseClicked(mouseEvent -> {
             selectedSection = "users";
+            addMemberButton.setStyle(null);
+            addMemberButton.setText(null);
+
+            addMemberButton.setOnMouseClicked(mouseEvent1 -> {
+
+            });
+
             try {
                 showUsersList();
             } catch (Exception e) {
@@ -238,6 +257,25 @@ public class HomePageController implements Initializable {
 
         groupsChatsSide.setOnMouseClicked(mouseEvent -> {
             selectedSection = "groups";
+
+            addMemberButton.setText("+member");
+            addMemberButton.setTextFill(Color.WHITE);
+            addMemberButton.setOnMouseClicked(mouseEvent1 -> {
+                Parent root = null;
+                Stage primaryStage = new Stage();
+                try {
+                    root = FXMLLoader.load(getClass().getResource("../View/AddMembersGroup.fxml"));
+                    primaryStage.setTitle("add member");
+                    Scene scene = new Scene(root);
+                    primaryStage.setScene(scene);
+                    primaryStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            });
+
+
             try {
                 showGroupsList();
             } catch (Exception e) {
@@ -263,6 +301,33 @@ public class HomePageController implements Initializable {
 
     }
 
+    private void showAddButtonInChannel(String sChannel){
+        try {
+            if (checkIfChannelAdmin(sChannel)){
+                addMemberButton.setText("+member");
+                addMemberButton.setTextFill(Color.WHITE);
+                addMemberButton.setOnMouseClicked(mouseEvent1 -> {
+                    Parent root = null;
+                    Stage primaryStage = new Stage();
+                    try {
+                        root = FXMLLoader.load(getClass().getResource("../View/AddMembersChannel.fxml"));
+                        primaryStage.setTitle("add member");
+                        Scene scene = new Scene(root);
+                        primaryStage.setScene(scene);
+                        primaryStage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }else {
+                addMemberButton.setText(null);
+                addMemberButton.setStyle(null);
+                addMemberButton.setOnMouseClicked(mouseEvent1 -> { });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void goToAddGroup() throws IOException {
         Stage stage = new Stage();
@@ -300,6 +365,7 @@ public class HomePageController implements Initializable {
                 try {
                     if (checkGroupName(textField.getText())){
                         addGroupToDatabase(textField.getText());
+                        addGroupMemberToDatabse(LoginPageController.loggedUser, textField.getText());
                         errorLBL.getScene().getWindow().hide();
                     }else {
                         errorLBL.setText("group name not available");
@@ -352,6 +418,7 @@ public class HomePageController implements Initializable {
                 try {
                     if (checkChannelName(textField.getText())){
                         addChannelToDatabase(textField.getText());
+                        addChannelMemberToDatabse(LoginPageController.loggedUser, textField.getText());
                         errorLBL.getScene().getWindow().hide();
                     }else {
                         errorLBL.setText("cahnnel name not available");
@@ -365,6 +432,24 @@ public class HomePageController implements Initializable {
         });
     }
 
+    private void addChannelMemberToDatabse(String member, String channelName) throws Exception {
+        Connection connection = Database.getConnection();
+        String sql = "INSERT INTO channel_members(channel_name, member_name) VALUES(?,?)";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, channelName);
+        ps.setString(2, member);
+        ps.executeUpdate();
+    }
+
+
+    private void addGroupMemberToDatabse(String member, String qroupName) throws Exception {
+        Connection connection = Database.getConnection();
+        String sql = "INSERT INTO group_members(group_name, member_name) VALUES(?,?)";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, qroupName);
+        ps.setString(2, member);
+        ps.executeUpdate();
+    }
 
     // show users in listview
 
@@ -582,17 +667,30 @@ public class HomePageController implements Initializable {
 
 
 
+    private boolean checkIfMember(String member, String qroupName) throws Exception {
+        Connection connection = Database.getConnection();
+        String sql = "SELECT * FROM group_members WHERE member_name = '"+member+"' AND group_name = '"+qroupName+"' ";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet set = ps.executeQuery();
+        if(set.next()) return true;
+        return false;
+    }
+
+
 
     void showGroupsList() throws Exception {
         sideVbox.getChildren().removeAll(sideVbox.getChildren());
         File file = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\groupProfile.png");
         Image image = new Image(file.toURI().toString());
+
         ListView<String> listView = new ListView<String>();
         ObservableList<String> items = FXCollections.observableArrayList ();
 
         ArrayList<Groups> groups = getGroups();
         for (int i = 0; i < groups.size(); i++) {
-            items.add(groups.get(i).getGroupName());
+            if (checkIfMember(LoginPageController.loggedUser, groups.get(i).getGroupName())){
+                items.add(groups.get(i).getGroupName());
+            }
         }
         listView.setItems(items);
         listView.setCellFactory(param -> new ListCell<String>() {
@@ -609,19 +707,25 @@ public class HomePageController implements Initializable {
                 setAlignment(Pos.CENTER_LEFT);
                 setCursor(Cursor.HAND);
                 setOnMouseClicked(mouseEvent -> {
-                    ObservableList selected = listView.getSelectionModel().getSelectedItems();
-                    for(Object o : selected){
-                        try {
-                            if (getIndex() < groups.size()){
-                                selectedGroup = groups.get(getIndex()).getGroupName();
-                                topOfChatUsername.setText(groups.get(getIndex()).getGroupName());
-                                showGroupChatHistory(LoginPageController.loggedUser, groups.get(getIndex()).getGroupName());
+                    try {
+                        if (checkIfMember(LoginPageController.loggedUser, groups.get(getIndex()).getGroupName())){
+                            ObservableList selected = listView.getSelectionModel().getSelectedItems();
+                            for(Object o : selected){
+                                try {
+                                    if (getIndex() < groups.size()){
+                                        selectedGroup = groups.get(getIndex()).getGroupName();
+                                        topOfChatUsername.setText(groups.get(getIndex()).getGroupName());
+                                        showGroupChatHistory(LoginPageController.loggedUser, groups.get(getIndex()).getGroupName());
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
                 });
                 setStyle("-fx-background-color:  linear-gradient(to top right,  #c9ebf5, #f5c1f3); -fx-background-insets: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, purple, 10, 0, 0, 0)");
             }
@@ -654,6 +758,19 @@ public class HomePageController implements Initializable {
         return channels;
     }
 
+    private boolean checkIfChannelMember(String member, String channelName) throws Exception {
+        Connection connection = Database.getConnection();
+        String sql = "SELECT * FROM channel_members WHERE member_name = '"+member+"' AND channel_name = '"+channelName+"' ";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet set = ps.executeQuery();
+        if(set.next()) {
+            connection.close();
+            return true;
+        }
+        connection.close();
+        return false;
+    }
+
     void showChannelsList() throws Exception {
         sideVbox.getChildren().removeAll(sideVbox.getChildren());
         File file = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\channelProfile.png");
@@ -663,7 +780,10 @@ public class HomePageController implements Initializable {
 
         ArrayList<Channels> channels = getChannels();
         for (int i = 0; i < channels.size(); i++) {
-            items.add(channels.get(i).getChannelName());
+            if (checkIfChannelMember(LoginPageController.loggedUser, channels.get(i).getChannelName())){
+                items.add(channels.get(i).getChannelName());
+            }
+
         }
         listView.setItems(items);
         listView.setCellFactory(param -> new ListCell<String>() {
@@ -680,19 +800,26 @@ public class HomePageController implements Initializable {
                 setAlignment(Pos.CENTER_LEFT);
                 setCursor(Cursor.HAND);
                 setOnMouseClicked(mouseEvent -> {
-                    ObservableList selected = listView.getSelectionModel().getSelectedItems();
-                    for(Object o : selected){
-                        try {
-                            if (getIndex() < channels.size()){
-                                selectedChannel = channels.get(getIndex()).getChannelName();
-                                topOfChatUsername.setText(channels.get(getIndex()).getChannelName());
-                                showChannelChatHistory(channels.get(getIndex()).getChannelName());
+                    try {
+                        if (getIndex() < channels.size()) {
+                            if (checkIfChannelMember(LoginPageController.loggedUser, channels.get(getIndex()).getChannelName())) {
+                                ObservableList selected = listView.getSelectionModel().getSelectedItems();
+                                for (Object o : selected) {
+                                    try {
+                                        showAddButtonInChannel(selectedChannel);
+                                        selectedChannel = channels.get(getIndex()).getChannelName();
+                                        topOfChatUsername.setText(channels.get(getIndex()).getChannelName());
+                                        showChannelChatHistory(channels.get(getIndex()).getChannelName());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
                 });
                 setStyle("-fx-background-color:  linear-gradient(to top right,  #c9ebf5, #f5c1f3); -fx-background-insets: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, purple, 10, 0, 0, 0)");
             }

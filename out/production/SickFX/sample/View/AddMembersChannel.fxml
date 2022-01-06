@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="599.0" style="-fx-background-color: #c9ebf5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller.AddMembersChannel">
+    <children>
+        <VBox fx:id="sideVbox" prefHeight="400.0" prefWidth="274.0" style="-fx-background-color: #c9ebf5;" />
+        <Label fx:id="notifLBL" alignment="CENTER" layoutX="307.0" layoutY="157.0" prefHeight="57.0" prefWidth="265.0">
+            <font>
+                <Font name="Century Schoolbook" size="17.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>

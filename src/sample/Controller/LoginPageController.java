@@ -26,6 +26,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sample.Database;
+import sample.Main;
 import sample.Model.Users;
 
 import java.io.File;
@@ -58,6 +59,8 @@ public class LoginPageController implements Initializable {
     @FXML
     private Label validationMessageLB;
 
+    @FXML
+    private Label restoreLBL;
 
     static Stage registerPage = null;
 
@@ -65,17 +68,32 @@ public class LoginPageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
 
-        File logFile = new File("C:\\Users\\Justim\\IdeaProjects\\SickFX\\images\\loginImage.jpg");
+        File logFile = new File("C:\\Users\\Justim\\Downloads\\image.png");
         Image logImage = new Image(logFile.toURI().toString());
         loginImage.setImage(logImage);
 
+//        RotateTransition transition = new RotateTransition();
+//        transition.setNode(loginImage);
+//        transition.setDuration(Duration.millis(3000));
+//        transition.setCycleCount(TranslateTransition.INDEFINITE);
+//        transition.setByAngle(360);
+//        transition.play();
 
-        RotateTransition transition = new RotateTransition();
-        transition.setNode(loginImage);
-        transition.setDuration(Duration.millis(3000));
-        transition.setCycleCount(TranslateTransition.INDEFINITE);
-        transition.setByAngle(360);
-        transition.play();
+        restoreLBL.setOnMouseClicked(mouseEvent -> {
+            Parent root = null;
+            Stage primaryStage = new Stage();
+            try {
+                root = FXMLLoader.load(getClass().getResource("../View/RestorePage.fxml"));
+                primaryStage.setTitle("restore");
+                Scene scene = new Scene(root);
+                primaryStage.setScene(scene);
+                primaryStage.setResizable(false);
+                primaryStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
 
         signUpButton.setOnMouseClicked(mouseEvent -> {
             try {
@@ -143,7 +161,8 @@ public class LoginPageController implements Initializable {
 
     static boolean confirmLogin(String username, String password) throws Exception {
         Connection connection = Database.getConnection();
-        String sql  = "SELECT * FROM users WHERE username = '"+username+"' and password = '"+password+"'";
+        String pass = Main.getMd5(password);
+        String sql  = "SELECT * FROM users WHERE username = '"+username+"' and password = '"+pass+"'";
         PreparedStatement pstm = connection.prepareStatement(sql);
         ResultSet resultSet = pstm.executeQuery();
         return resultSet.next();

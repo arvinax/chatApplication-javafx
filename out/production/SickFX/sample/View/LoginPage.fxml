@@ -89,7 +89,7 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="73.0" prefWidth="310.0" style="-fx-background-color: #2e354f;">
                     <children>
-                        <Label layoutX="180.0" layoutY="19.0" text="Jasem&amp;Sarah" textFill="#8c90b3">
+                        <Label layoutX="221.0" layoutY="19.0" text="Chatcore" textFill="#8c90b3">
                             <font>
                                 <Font name="Century Schoolbook" size="18.0" />
                             </font>
@@ -122,15 +122,15 @@
                   <PasswordField fx:id="enterPasswordField" layoutX="1.0" layoutY="1.0" prefHeight="48.0" prefWidth="270.0" promptText="password" />
                </children>
                 </AnchorPane>
-                <ImageView fx:id="loginImage" fitHeight="107.0" fitWidth="140.0" layoutX="105.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="loginImage" fitHeight="107.0" fitWidth="140.0" layoutX="91.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../../images/loginImage.jpg" />
+                        <Image url="@../../../../../Downloads/image_2022-01-06_02-55-28-removebg-preview.png" />
                     </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
                 </ImageView>
-                  <Label layoutX="238.0" layoutY="367.0" text="Restore?" textFill="#8c90b3">
+                  <Label fx:id="restoreLBL" layoutX="238.0" layoutY="367.0" text="Restore?" textFill="#8c90b3">
                       <font>
                           <Font size="14.0" />
                       </font>
